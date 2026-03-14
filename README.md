@@ -1,4 +1,22 @@
-# RFID Demo
+# React Native RFID Demo (Android)
+
+[![Platform](https://img.shields.io/badge/platform-Android-green)](https://developer.android.com/)
+[![React Native](https://img.shields.io/badge/React%20Native-0.84-blue)](https://reactnative.dev/)
+[![RFID](https://img.shields.io/badge/use%20case-RFID%20Scanning-orange)](#)
+
+Production-ready React Native RFID demo for Android handheld scanners, built with a TurboModule-compatible native bridge and a mock fallback mode.
+
+If you are searching for terms like **react native rfid**, **android rfid sdk**, **rfid handheld scanner app**, or **warehouse asset tracking demo**, this repository is designed as a practical reference implementation.
+
+## Discoverability Checklist (GitHub SEO)
+To maximize search visibility for this public repo, configure these in GitHub repository settings:
+- Repository name: include `rfid` and `react-native` terms
+- Description: mention `React Native RFID Android TurboModule demo`
+- Topics: add `react-native`, `rfid`, `android`, `turbomodule`, `inventory-management`, `asset-tracking`, `warehouse`
+- Social preview image: add a dashboard screenshot
+- Releases: publish tagged releases with clear notes (`v0.1.0`, `v0.2.0`)
+
+These settings are indexed by both GitHub search and external search engines.
 
 ## Executive Summary
 This project is a production-grade React Native RFID demo designed for real warehouse and asset-tracking scenarios.
@@ -139,6 +157,17 @@ npm install
 npm run start
 npm run android
 ```
+
+## Search Keywords
+This repository is relevant for the following search intents:
+- react native rfid demo
+- react native android rfid integration
+- android handheld rfid scanner app
+- rfid inventory tracking mobile app
+- react native turbomodule native module example
+- uhf rfid reader sdk integration
+
+Use these terms naturally in pull requests, release notes, and shared technical articles that reference this repo to improve discoverability over time.
 
 ## Conclusion
 This demo is engineered to be presentation-safe, operationally realistic, and technically credible.
