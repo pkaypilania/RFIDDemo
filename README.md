@@ -1,97 +1,145 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# RFID Demo
 
-# Getting Started
+## Executive Summary
+This project is a production-grade React Native RFID demo designed for real warehouse and asset-tracking scenarios.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+It combines:
+- A modern React Native UI
+- Android native RFID integration through a TurboModule-compatible architecture
+- High reliability fallback behavior for non-supported devices
+- Fast, memory-conscious tag processing suitable for live demos and field tests
 
-## Step 1: Start Metro
+## What Makes This Demo Ready
+- Native-feel performance with React Native New Architecture enabled
+- Real hardware mode for supported RFID handhelds
+- Mock mode fallback for unsupported devices, ensuring demo continuity
+- Defensive error handling across initialization, scanning, and mode transitions
+- Clean code separation: screen UI, styles, and business logic split by responsibility
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Demo Highlights
+### 1. Hardware Compatibility Intelligence
+The app detects hardware capability and can switch to mock mode if hardware init fails.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+Client impact:
+- No demo dead-ends
+- Stable behavior even on mixed test devices
 
-```sh
-# Using npm
-npm start
+### 2. Real-Time RFID Workflows
+Supported interactions:
+- Initialize reader
+- Single tag scan
+- Continuous scanning loop
+- Stop scan
+- Clear session list
+- Power tuning (1-30)
 
-# OR using Yarn
-yarn start
-```
+Client impact:
+- Demonstrates practical floor operations
+- Shows tunable performance controls for different environments
 
-## Step 2: Build and run your app
+### 3. Live Operational Metrics
+Dashboard tracks and renders:
+- Total reads
+- Unique tags
+- Per-tag RSSI
+- Seen count
+- Last seen timestamp
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+Client impact:
+- Instant visibility into scan quality and throughput
+- Easy to explain operational behavior during presentations
 
-### Android
+## Architecture Overview
+### Frontend (React Native)
+- Dashboard screen: `src/screens/Dashboard/index.tsx`
+- Dashboard logic hook: `src/screens/Dashboard/useDashboard.ts`
+- Dashboard styles: `src/screens/Dashboard/style.ts`
+- App bootstrap: `App.tsx`
 
-```sh
-# Using npm
+### Native Bridge (Android)
+- JS wrapper: `src/native/RfidModule.ts`
+- TurboModule spec: `src/specs/NativeRfidModule.ts`
+- Native module: `android/app/src/main/java/com/rfiddemo/rfid/RfidModule.kt`
+- Package registration: `android/app/src/main/java/com/rfiddemo/rfid/RfidPackage.kt`
+- Device scanner: `android/app/src/main/java/com/rfiddemo/rfid/DeviceRfidScanner.kt`
+- Mock scanner: `android/app/src/main/java/com/rfiddemo/rfid/MockRfidScanner.kt`
+
+### RFID SDK Integration
+- Vendor AAR: `android/app/libs/DeviceAPI_ver20231208_release.aar`
+
+## AAR Setup Requirement
+This repository does not include the vendor RFID SDK AAR in Git.
+
+This demo is for Android only.
+
+You must manually add the SDK file before building Android:
+- Required path: `android/app/libs/DeviceAPI_ver20231208_release.aar`
+- Required filename: `DeviceAPI_ver20231208_release.aar` (exact match)
+
+Reason:
+- The AAR is intentionally not committed for legal/compliance safety.
+
+Important:
+- Android build will fail if this AAR is missing.
+- Do not push this AAR to public repositories.
+- Share the AAR only through approved internal channels.
+- RFID features are supported only on Android devices with compatible hardware.
+
+## Quick Setup (New Developers)
+1. Clone this repository.
+2. Create the `android/app/libs` folder if it does not exist.
+3. Copy `DeviceAPI_ver20231208_release.aar` into `android/app/libs`.
+4. Install dependencies with `npm install`.
+5. Start Metro with `npm run start`.
+6. Run Android with `npm run android`.
+
+## Reliability and Safety Practices
+- Reader lifecycle is controlled (initialize/release)
+- Continuous scan task runs off the UI thread
+- Scan failures are surfaced through structured events
+- Initialization failures can fall back to mock mode
+- Tag list is bounded to avoid unbounded memory growth
+
+## Performance Considerations
+- In-memory tag map updates are O(1) average
+- Rendering list data via FlatList for efficient UI updates
+- Scan interval configured for responsive yet stable continuous mode
+- Minimal allocations in critical scanning paths where possible
+
+## Demo Flow (Suggested for Client Meeting)
+1. Open app and explain mode indicator (hardware/mock)
+2. Press Initialize
+3. Show power adjustment and explain range vs precision trade-off
+4. Run Single Scan to verify reader path
+5. Start Continuous Scan and present live counters
+6. Stop scan and review collected tags
+7. Toggle Mock Mode and repeat quickly to prove fallback resilience
+
+## Practical Talking Points for Stakeholders
+- "This is not a toy UI; it is structured for maintainability and scale."
+- "The module design supports future migration to dedicated JSI/C++ optimizations if required."
+- "The fallback strategy ensures operational continuity across diverse device fleets."
+- "The current implementation is ready to integrate with backend inventory APIs as a next step."
+
+## Known Scope Boundaries
+- RFID scanning support is Android-specific due to vendor SDK constraints
+- iOS path is currently non-RFID (can be extended separately)
+
+## Next Phase Recommendations
+- Add export (CSV/JSON) for scanned sessions
+- Add domain-specific validation rules per tag category
+- Add role-based workflow modes (operator, supervisor, auditor)
+- Add telemetry and crash analytics for production rollout
+
+## Build and Run
+From project root:
+
+```bash
+npm install
+npm run start
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## Conclusion
+This demo is engineered to be presentation-safe, operationally realistic, and technically credible.
+It demonstrates both immediate business value and a clear path to production implementation.
